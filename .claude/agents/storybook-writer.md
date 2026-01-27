@@ -174,25 +174,13 @@ Use queries in this priority order:
 - `DisabledState` - Disabled behavior
 - `MultipleSelection` - Multi-select behavior
 
-## Verification (Required)
+## Verification
 
-**Your task is NOT complete until these checks pass:**
+After creating stories, run TypeScript check to verify there are no type errors:
 
-1. **TypeScript check** - Verify there are no type errors:
-   ```bash
-   npm run typecheck
-   ```
-
-2. **Run Storybook tests** - Verify all play function tests pass:
-   ```bash
-   npm run test-storybook
-   ```
-   If no test-storybook script exists, start Storybook and verify stories render without errors:
-   ```bash
-   npm run storybook
-   ```
-
-If either check fails, fix the issues before considering the task complete.
+```bash
+npm run typecheck
+```
 
 ## Do NOT
 
@@ -201,5 +189,4 @@ If either check fails, fix the issues before considering the task complete.
 - Use `data-testid` when accessible queries work
 - Skip reading the component implementation first
 - Guess at component structure - always read the files
-- Consider the task complete without running verification checks
-- Leave TypeScript errors or failing tests unresolved
+- Leave TypeScript errors unresolved

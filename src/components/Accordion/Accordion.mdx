@@ -1,190 +1,487 @@
 import {
-    Meta,
-    Title,
-    Subtitle,
-    Description,
-    Primary,
-    Controls,
-    Canvas,
-    ArgTypes,
-} from '@storybook/addon-docs/blocks'
-import * as AccordionStories from './Accordion.stories'
-import { Accordion } from '.'
+  Canvas,
+  Controls,
+  Meta,
+  Source,
+  Subtitle,
+  Title,
+} from '@storybook/addon-docs/blocks';
+
+import * as AccordionStories from './Accordion.stories';
 
 <Meta of={AccordionStories} />
 
-<Title>Accordion</Title>
+<Title />
 
 <Subtitle>
-    A vertically stacked set of interactive headings that reveal or hide
-    associated content.
+  A vertically stacked set of interactive headings that reveal or hide associated content sections. Built on <a className="text-link underline" href="https://www.radix-ui.com/primitives/docs/components/accordion" target="_blank" rel="noopener noreferrer">Radix UI Accordion</a> for robust accessibility out of the box — including focus management, keyboard navigation, and screen reader support. All UI primitives are fully customisable.
 </Subtitle>
 
-<Description>
-The Accordion component provides a way to organize content into collapsible sections,
-allowing users to show and hide content as needed. It supports both single and multiple
-expansion modes, keyboard navigation, and smooth animations.
+## Installation
 
-Built on top of [Radix UI Accordion](https://www.radix-ui.com/primitives/docs/components/accordion),
-this component comes with styled defaults while maintaining full accessibility support.
+<Source
+  code={`import { Accordion } from '@/components/Accordion';`}
+  language="tsx"
+/>
 
-</Description>
+## Out Of The Box Usage
 
-<Primary />
+The built-in primitives provide sensible defaults with styled components ready to use.
 
-<Controls />
-
-## Usage
-
-```tsx
-import { Accordion } from '@/components/Accordion'
-
-;<Accordion.Root type='single' collapsible>
-    <Accordion.Item value='item-1'>
-        <Accordion.Header>
-            <Accordion.Trigger>Section Title</Accordion.Trigger>
-        </Accordion.Header>
-        <Accordion.Content>Section content goes here.</Accordion.Content>
-    </Accordion.Item>
+<Source
+  code={`
+<Accordion.Root type="single" collapsible>
+  <Accordion.Item value="item-1">
+    <Accordion.Header>
+      <Accordion.Trigger>Section Title</Accordion.Trigger>
+    </Accordion.Header>
+    <Accordion.Content>
+      Section content goes here.
+    </Accordion.Content>
+  </Accordion.Item>
 </Accordion.Root>
-```
+  `}
+  language="tsx"
+/>
 
-## Anatomy
+## Fully Custom Usage
 
-The Accordion is composed of five primitives that work together:
+Skip the built-in styles for complete control while retaining accessibility, focus management, and keyboard navigation.
 
-- **Root** - Container that manages accordion state and provides context to child items
-- **Item** - Wraps a single collapsible section (header + content)
-- **Header** - Semantic wrapper for the trigger, renders as an `h3` by default
-- **Trigger** - Button that toggles the expanded/collapsed state
-- **Content** - Container for the collapsible content with animated height transitions
-
-```tsx
-<Accordion.Root>
-    <Accordion.Item>
-        <Accordion.Header>
-            <Accordion.Trigger />
-        </Accordion.Header>
-        <Accordion.Content />
-    </Accordion.Item>
+<Source
+  code={`
+<Accordion.Root type="single" collapsible>
+  <Accordion.Item value="item-1">
+    <Accordion.Header asChild>
+      <h2>
+        <Accordion.Trigger asChild>
+          <button className="custom-trigger">Custom Trigger</button>
+        </Accordion.Trigger>
+      </h2>
+    </Accordion.Header>
+    <Accordion.Content className="custom-content">
+      <div className="your-custom-layout">
+        {/* Your completely custom content */}
+      </div>
+    </Accordion.Content>
+  </Accordion.Item>
 </Accordion.Root>
-```
+  `}
+  language="tsx"
+/>
+
+## Customisation
+
+### Single vs Multiple Mode
+
+Control whether one or multiple items can be expanded at the same time.
+
+<Source
+  code={`
+// Only one item open at a time
+<Accordion.Root type="single" collapsible>
+  {/* items */}
+</Accordion.Root>
+
+// Multiple items can be open simultaneously
+<Accordion.Root type="multiple">
+  {/* items */}
+</Accordion.Root>
+  `}
+  language="tsx"
+/>
+
+### Default Expanded Items
+
+Set which items are expanded on initial render.
+
+<Source
+  code={`
+// Single mode: pass a string
+<Accordion.Root type="single" collapsible defaultValue="item-2">
+  {/* items */}
+</Accordion.Root>
+
+// Multiple mode: pass an array
+<Accordion.Root type="multiple" defaultValue={['item-1', 'item-3']}>
+  {/* items */}
+</Accordion.Root>
+  `}
+  language="tsx"
+/>
+
+### Controlled State
+
+Manage expanded state externally for full control.
+
+<Source
+  code={`
+const [value, setValue] = useState<string>('');
+
+<Accordion.Root
+  type="single"
+  collapsible
+  value={value}
+  onValueChange={setValue}
+>
+  {/* items */}
+</Accordion.Root>
+  `}
+  language="tsx"
+/>
+
+## Primitives
+
+<table>
+  <thead>
+    <tr>
+      <th>Primitive</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Root</code></td>
+      <td>Container that manages accordion state. Requires <code>type</code> prop of <code>"single"</code> or <code>"multiple"</code>.</td>
+    </tr>
+    <tr>
+      <td><code>Item</code></td>
+      <td>Wraps each collapsible section. Requires a unique <code>value</code> prop.</td>
+    </tr>
+    <tr>
+      <td><code>Header</code></td>
+      <td>Semantic heading wrapper (renders as <code>h3</code> by default). Use <code>asChild</code> to render your own element.</td>
+    </tr>
+    <tr>
+      <td><code>Trigger</code></td>
+      <td>Button that toggles the expanded/collapsed state. Includes a chevron icon that rotates when open.</td>
+    </tr>
+    <tr>
+      <td><code>Content</code></td>
+      <td>Collapsible container with animated height transitions.</td>
+    </tr>
+  </tbody>
+</table>
 
 ## Examples
 
-### Default (Single Mode)
+### Default
 
-In single mode with `collapsible` enabled, only one item can be open at a time, and clicking an open item will close it.
+The most common configuration: single mode with collapsible enabled, allowing one item open at a time with the ability to collapse all items.
 
-<Canvas of={AccordionStories.Default} />
+<Canvas of={AccordionStories.Default} sourceState="hidden" />
 
 ### Multiple Mode
 
 Set `type="multiple"` to allow multiple items to be expanded simultaneously.
 
-<Canvas of={AccordionStories.MultipleMode} />
+<Canvas of={AccordionStories.MultipleMode} sourceState="hidden" />
 
 ### Default Expanded
 
 Use `defaultValue` to specify which item(s) should be expanded on initial render.
 
-<Canvas of={AccordionStories.DefaultExpanded} />
+<Canvas of={AccordionStories.DefaultExpanded} sourceState="hidden" />
 
-### Multiple Default Expanded
+### Default Expanded (Multiple)
 
-In multiple mode, pass an array to `defaultValue` to expand multiple items by default.
+In multiple mode, pass an array to `defaultValue` to expand multiple items initially.
 
-<Canvas of={AccordionStories.DefaultExpandedMultiple} />
+<Canvas of={AccordionStories.DefaultExpandedMultiple} sourceState="hidden" />
 
 ### Disabled Item
 
-Individual items can be disabled by setting the `disabled` prop on `Accordion.Item`.
+Individual items can be disabled to prevent interaction.
 
-<Canvas of={AccordionStories.DisabledItem} />
+<Canvas of={AccordionStories.DisabledItem} sourceState="hidden" />
 
-### Keyboard Navigation
-
-The accordion supports full keyboard navigation including arrow keys, Home, and End.
-
-<Canvas of={AccordionStories.KeyboardNavigation} />
-
-## API Reference
+## Props
 
 ### Root
 
-Container component that manages the accordion state. Must wrap all accordion items.
+<p className="text-sm text-muted mb-4">
+  Inherits all props from <a className="text-link underline" href="https://www.radix-ui.com/primitives/docs/components/accordion#root" target="_blank" rel="noopener noreferrer">Radix Accordion Root</a>.
+</p>
 
-| Prop            | Type                     | Default | Description                                    |
-| --------------- | ------------------------ | ------- | ---------------------------------------------- |
-| `type`          | `"single" \| "multiple"` | -       | Whether only one or multiple items can be open |
-| `value`         | `string \| string[]`     | -       | Controlled open state                          |
-| `defaultValue`  | `string \| string[]`     | -       | Default open item(s)                           |
-| `collapsible`   | `boolean`                | `false` | Allow closing all items (single mode only)     |
-| `disabled`      | `boolean`                | `false` | Disable all items                              |
-| `onValueChange` | `(value) => void`        | -       | Callback when open state changes               |
-| `className`     | `string`                 | -       | Additional CSS classes                         |
+#### Commonly Used Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Required</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>type</code></td>
+      <td><code>'single' | 'multiple'</code></td>
+      <td>—</td>
+      <td>Yes</td>
+      <td>Determines whether one or multiple items can be open at once</td>
+    </tr>
+    <tr>
+      <td><code>collapsible</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>No</td>
+      <td>When <code>type="single"</code>, allows closing all items</td>
+    </tr>
+    <tr>
+      <td><code>defaultValue</code></td>
+      <td><code>string | string[]</code></td>
+      <td>—</td>
+      <td>No</td>
+      <td>The value(s) of item(s) to expand on mount (uncontrolled)</td>
+    </tr>
+    <tr>
+      <td><code>value</code></td>
+      <td><code>string | string[]</code></td>
+      <td>—</td>
+      <td>No</td>
+      <td>Controlled expanded value(s)</td>
+    </tr>
+    <tr>
+      <td><code>onValueChange</code></td>
+      <td><code>(value) =&gt; void</code></td>
+      <td>—</td>
+      <td>No</td>
+      <td>Callback when expanded state changes</td>
+    </tr>
+    <tr>
+      <td><code>disabled</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>No</td>
+      <td>Disables all items in the accordion</td>
+    </tr>
+    <tr>
+      <td><code>className</code></td>
+      <td><code>string</code></td>
+      <td>—</td>
+      <td>No</td>
+      <td>Additional CSS classes applied to the root element</td>
+    </tr>
+  </tbody>
+</table>
 
 ### Item
 
-Wraps a single accordion section containing a header and content.
+<p className="text-sm text-muted mb-4">
+  Inherits all props from <a className="text-link underline" href="https://www.radix-ui.com/primitives/docs/components/accordion#item" target="_blank" rel="noopener noreferrer">Radix Accordion Item</a>.
+</p>
 
-| Prop        | Type      | Default | Description                               |
-| ----------- | --------- | ------- | ----------------------------------------- |
-| `value`     | `string`  | -       | Unique identifier for the item (required) |
-| `disabled`  | `boolean` | `false` | Disable this item                         |
-| `className` | `string`  | -       | Additional CSS classes                    |
+#### Commonly Used Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Required</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>value</code></td>
+      <td><code>string</code></td>
+      <td>—</td>
+      <td>Yes</td>
+      <td>Unique identifier for the item</td>
+    </tr>
+    <tr>
+      <td><code>disabled</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>No</td>
+      <td>Prevents the item from being interacted with</td>
+    </tr>
+    <tr>
+      <td><code>className</code></td>
+      <td><code>string</code></td>
+      <td>—</td>
+      <td>No</td>
+      <td>Additional CSS classes</td>
+    </tr>
+  </tbody>
+</table>
 
 ### Header
 
-Semantic wrapper for the trigger element. Renders as an `h3` by default.
+<p className="text-sm text-muted mb-4">
+  Inherits all props from <a className="text-link underline" href="https://www.radix-ui.com/primitives/docs/components/accordion#header" target="_blank" rel="noopener noreferrer">Radix Accordion Header</a>.
+</p>
 
-| Prop        | Type      | Default | Description                    |
-| ----------- | --------- | ------- | ------------------------------ |
-| `asChild`   | `boolean` | `false` | Merge props onto child element |
-| `className` | `string`  | -       | Additional CSS classes         |
+#### Commonly Used Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Required</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>asChild</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>No</td>
+      <td>Merge props onto child element instead of rendering default <code>h3</code></td>
+    </tr>
+    <tr>
+      <td><code>className</code></td>
+      <td><code>string</code></td>
+      <td>—</td>
+      <td>No</td>
+      <td>Additional CSS classes</td>
+    </tr>
+  </tbody>
+</table>
 
 ### Trigger
 
-Button that toggles the expanded state of the associated content.
+<p className="text-sm text-muted mb-4">
+  Inherits all props from <a className="text-link underline" href="https://www.radix-ui.com/primitives/docs/components/accordion#trigger" target="_blank" rel="noopener noreferrer">Radix Accordion Trigger</a>.
+</p>
 
-| Prop        | Type      | Default | Description                    |
-| ----------- | --------- | ------- | ------------------------------ |
-| `asChild`   | `boolean` | `false` | Merge props onto child element |
-| `className` | `string`  | -       | Additional CSS classes         |
+#### Commonly Used Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Required</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>asChild</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>No</td>
+      <td>Merge props onto child element</td>
+    </tr>
+    <tr>
+      <td><code>className</code></td>
+      <td><code>string</code></td>
+      <td>—</td>
+      <td>No</td>
+      <td>Additional CSS classes</td>
+    </tr>
+  </tbody>
+</table>
 
 ### Content
 
-Container for the collapsible content with animated height transitions.
+<p className="text-sm text-muted mb-4">
+  Inherits all props from <a className="text-link underline" href="https://www.radix-ui.com/primitives/docs/components/accordion#content" target="_blank" rel="noopener noreferrer">Radix Accordion Content</a>.
+</p>
 
-| Prop         | Type      | Default | Description                         |
-| ------------ | --------- | ------- | ----------------------------------- |
-| `forceMount` | `boolean` | -       | Force content to render when closed |
-| `className`  | `string`  | -       | Additional CSS classes              |
+#### Commonly Used Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Required</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>forceMount</code></td>
+      <td><code>boolean</code></td>
+      <td><code>false</code></td>
+      <td>No</td>
+      <td>Force mount content even when collapsed (useful for animations or SEO)</td>
+    </tr>
+    <tr>
+      <td><code>className</code></td>
+      <td><code>string</code></td>
+      <td>—</td>
+      <td>No</td>
+      <td>Additional CSS classes</td>
+    </tr>
+  </tbody>
+</table>
 
 ## Accessibility
 
-The Accordion component follows the [WAI-ARIA Accordion Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/).
+The Accordion component follows the [WAI-ARIA Accordion Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/) and provides full keyboard navigation automatically.
 
-### Keyboard Navigation
+- **Focus management** — Focus moves between triggers using arrow keys, with wrapping at boundaries
+- **Keyboard navigation** — Full support for Tab, Enter, Space, Arrow keys, Home, and End
+- **ARIA attributes** — Automatic `aria-expanded`, `aria-controls`, and `role="region"` handling
 
-| Key               | Action                                       |
-| ----------------- | -------------------------------------------- |
-| `Enter` / `Space` | Toggle the focused item                      |
-| `Tab`             | Move focus to the next focusable element     |
-| `Shift + Tab`     | Move focus to the previous focusable element |
-| `ArrowDown`       | Move focus to the next trigger               |
-| `ArrowUp`         | Move focus to the previous trigger           |
-| `Home`            | Move focus to the first trigger              |
-| `End`             | Move focus to the last trigger               |
+### Keyboard Shortcuts
 
-### ARIA Attributes
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Tab</code></td>
+      <td>Move focus to the next focusable element</td>
+    </tr>
+    <tr>
+      <td><code>Shift + Tab</code></td>
+      <td>Move focus to the previous focusable element</td>
+    </tr>
+    <tr>
+      <td><code>Enter</code> / <code>Space</code></td>
+      <td>Toggle the focused accordion item</td>
+    </tr>
+    <tr>
+      <td><code>Arrow Down</code></td>
+      <td>Move focus to the next trigger (wraps to first)</td>
+    </tr>
+    <tr>
+      <td><code>Arrow Up</code></td>
+      <td>Move focus to the previous trigger (wraps to last)</td>
+    </tr>
+    <tr>
+      <td><code>Home</code></td>
+      <td>Move focus to the first trigger</td>
+    </tr>
+    <tr>
+      <td><code>End</code></td>
+      <td>Move focus to the last trigger</td>
+    </tr>
+  </tbody>
+</table>
 
-- Each trigger has `aria-expanded` indicating the current state
-- Each trigger has `aria-controls` pointing to its content panel
-- Each content panel has `aria-labelledby` pointing to its trigger
-- The header uses appropriate heading semantics (`h3` by default)
+## Guidelines
 
-## Related
+### Do
 
-- [Radix UI Accordion](https://www.radix-ui.com/primitives/docs/components/accordion) - The underlying primitive
-- [WAI-ARIA Accordion Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/) - Accessibility guidelines
+- ✅ Use `type="single"` with `collapsible` for FAQ-style content where users typically read one section at a time
+- ✅ Use `type="multiple"` when users may need to compare content across sections
+- ✅ Provide clear, descriptive trigger labels that indicate what content will be revealed
+- ✅ Keep content within each section focused and concise
+- ✅ Use `defaultValue` to expand the most relevant section on page load
+
+### Don't
+
+- ❌ Nest accordions within accordions — it creates confusing navigation patterns
+- ❌ Use an accordion for content that users need to see all at once
+- ❌ Hide critical information that users must see to complete a task
+- ❌ Use `type="single"` without `collapsible` unless one section must always be visible
+- ❌ Put too much content in a single accordion item — consider breaking it into multiple items

@@ -1,0 +1,410 @@
+import {
+  Canvas,
+  Controls,
+  Meta,
+  Source,
+  Subtitle,
+  Title,
+} from '@storybook/addon-docs/blocks';
+
+import * as RichTextEditorStories from './RichTextEditor.stories';
+
+<Meta of={RichTextEditorStories} />
+
+<Title />
+
+<Subtitle>
+  A composable rich text editor built on <a className="text-link underline" href="https://docs.slatejs.org/" target="_blank" rel="noopener noreferrer">Slate.js</a> for flexible, extensible editing. Provides inline formatting (bold, italic, underline, code), block-level elements (headings, quotes, lists), and text alignment out of the box. Includes full keyboard shortcut support and accessible toolbar controls. All UI primitives are fully customisable.
+</Subtitle>
+
+## Installation
+
+<Source
+  code={`import { RichTextEditor } from '@/components/RichTextEditor';
+
+// Optionally import icons
+import {
+  BoldIcon,
+  ItalicIcon,
+  UnderlineIcon,
+  CodeIcon,
+  Heading1Icon,
+  Heading2Icon,
+  QuoteIcon,
+  ListOrderedIcon,
+  ListUnorderedIcon,
+  AlignLeftIcon,
+  AlignCenterIcon,
+  AlignRightIcon,
+  AlignJustifyIcon,
+} from '@/components/RichTextEditor';`}
+  language="tsx"
+/>
+
+## Out Of The Box Usage
+
+The built-in primitives provide sensible defaults for a full-featured rich text editing experience. Compose the toolbar with the formatting buttons you need.
+
+<Source
+  code={`<RichTextEditor.Root>
+  <RichTextEditor.Toolbar>
+    <RichTextEditor.MarkButton format="bold" icon={<BoldIcon />} />
+    <RichTextEditor.MarkButton format="italic" icon={<ItalicIcon />} />
+    <RichTextEditor.MarkButton format="underline" icon={<UnderlineIcon />} />
+    <RichTextEditor.MarkButton format="code" icon={<CodeIcon />} />
+    <RichTextEditor.Separator />
+    <RichTextEditor.BlockButton format="heading-one" icon={<Heading1Icon />} />
+    <RichTextEditor.BlockButton format="heading-two" icon={<Heading2Icon />} />
+    <RichTextEditor.BlockButton format="block-quote" icon={<QuoteIcon />} />
+    <RichTextEditor.Separator />
+    <RichTextEditor.BlockButton format="numbered-list" icon={<ListOrderedIcon />} />
+    <RichTextEditor.BlockButton format="bulleted-list" icon={<ListUnorderedIcon />} />
+  </RichTextEditor.Toolbar>
+  <RichTextEditor.Editable placeholder="Enter some rich text..." />
+</RichTextEditor.Root>`}
+  language="tsx"
+/>
+
+## Fully Custom Usage
+
+Skip built-in styling by providing your own `className` for complete control while retaining all editor functionality, keyboard shortcuts, and accessibility.
+
+<Source
+  code={`<RichTextEditor.Root className="custom-editor-container">
+  <RichTextEditor.Toolbar className="custom-toolbar">
+    <RichTextEditor.MarkButton
+      format="bold"
+      icon={<BoldIcon />}
+      className="custom-button"
+    />
+    {/* Add more buttons as needed */}
+  </RichTextEditor.Toolbar>
+  <RichTextEditor.Editable
+    className="custom-editable"
+    placeholder="Start writing..."
+    renderElement={({ attributes, children, element }) => {
+      // Custom element rendering
+      return <div {...attributes}>{children}</div>
+    }}
+    renderLeaf={({ attributes, children, leaf }) => {
+      // Custom leaf rendering
+      return <span {...attributes}>{children}</span>
+    }}
+  />
+</RichTextEditor.Root>`}
+  language="tsx"
+/>
+
+## Customisation
+
+### With Initial Value
+
+Pre-populate the editor with structured content using the Slate document format:
+
+<Source
+  code={`<RichTextEditor.Root
+  initialValue={[
+    {
+      type: 'heading-one',
+      children: [{ text: 'Welcome' }],
+    },
+    {
+      type: 'paragraph',
+      children: [
+        { text: 'This is ' },
+        { text: 'bold', bold: true },
+        { text: ' text.' },
+      ],
+    },
+  ]}
+>
+  <RichTextEditor.Toolbar>
+    {/* toolbar buttons */}
+  </RichTextEditor.Toolbar>
+  <RichTextEditor.Editable />
+</RichTextEditor.Root>`}
+  language="tsx"
+/>
+
+### Controlled Editor
+
+Track content changes with the `onChange` callback:
+
+<Source
+  code={`function ControlledEditor() {
+  const [content, setContent] = useState(initialValue);
+
+  return (
+    <RichTextEditor.Root
+      initialValue={content}
+      onChange={(value) => setContent(value)}
+    >
+      <RichTextEditor.Toolbar>
+        {/* toolbar buttons */}
+      </RichTextEditor.Toolbar>
+      <RichTextEditor.Editable />
+    </RichTextEditor.Root>
+  );
+}`}
+  language="tsx"
+/>
+
+### Read-Only Mode
+
+Display content without allowing edits:
+
+<Source
+  code={`<RichTextEditor.Root initialValue={documentContent}>
+  <RichTextEditor.Editable readOnly />
+</RichTextEditor.Root>`}
+  language="tsx"
+/>
+
+### Minimal Toolbar
+
+Include only the formatting options you need:
+
+<Source
+  code={`<RichTextEditor.Root>
+  <RichTextEditor.Toolbar>
+    <RichTextEditor.MarkButton format="bold" icon={<BoldIcon />} />
+    <RichTextEditor.MarkButton format="italic" icon={<ItalicIcon />} />
+    <RichTextEditor.MarkButton format="underline" icon={<UnderlineIcon />} />
+  </RichTextEditor.Toolbar>
+  <RichTextEditor.Editable placeholder="Start typing..." />
+</RichTextEditor.Root>`}
+  language="tsx"
+/>
+
+## Primitives
+
+| Primitive | Description |
+|-----------|-------------|
+| `Root` | Container that initializes the Slate editor and manages state. Wrap all other primitives in this. |
+| `Toolbar` | Container for formatting buttons with `role="toolbar"` and proper ARIA labelling. |
+| `MarkButton` | Button for toggling inline text marks (bold, italic, underline, code). |
+| `BlockButton` | Button for toggling block-level formatting (headings, quotes, lists, alignment). |
+| `Editable` | The contenteditable area where users type. Handles keyboard shortcuts and rendering. |
+| `Separator` | Visual divider for organizing toolbar sections. |
+
+## Available Formats
+
+### Text Marks (Inline)
+
+| Mark | Description | Keyboard Shortcut |
+|------|-------------|-------------------|
+| `bold` | Bold text | `Ctrl/Cmd + B` |
+| `italic` | Italic text | `Ctrl/Cmd + I` |
+| `underline` | Underlined text | `Ctrl/Cmd + U` |
+| `code` | Inline code (monospace) | `Ctrl/Cmd + \`` |
+
+### Block Types
+
+| Type | Description |
+|------|-------------|
+| `paragraph` | Default paragraph block |
+| `heading-one` | Large heading (h1) |
+| `heading-two` | Medium heading (h2) |
+| `block-quote` | Block quote with left border |
+| `bulleted-list` | Unordered bullet list |
+| `numbered-list` | Ordered numbered list |
+| `list-item` | Individual list item |
+
+### Text Alignment
+
+| Alignment | Description |
+|-----------|-------------|
+| `left` | Left-aligned text (default) |
+| `center` | Center-aligned text |
+| `right` | Right-aligned text |
+| `justify` | Justified text |
+
+## Examples
+
+### Default
+
+The full-featured editor with all formatting options.
+
+<Canvas of={RichTextEditorStories.Default} sourceState="hidden" />
+
+### Minimal Toolbar
+
+A simplified toolbar with only basic text formatting.
+
+<Canvas of={RichTextEditorStories.MinimalToolbar} sourceState="hidden" />
+
+### With Custom Initial Value
+
+Editor pre-populated with various content types.
+
+<Canvas of={RichTextEditorStories.WithCustomInitialValue} sourceState="hidden" />
+
+### Read Only
+
+Display content without editing capabilities.
+
+<Canvas of={RichTextEditorStories.ReadOnly} sourceState="hidden" />
+
+### With Block Quote
+
+Content featuring a styled block quote.
+
+<Canvas of={RichTextEditorStories.WithBlockQuote} sourceState="hidden" />
+
+### With Numbered List
+
+Content with an ordered list.
+
+<Canvas of={RichTextEditorStories.WithNumberedList} sourceState="hidden" />
+
+### With Centered Text
+
+Content with center-aligned text.
+
+<Canvas of={RichTextEditorStories.WithCenteredText} sourceState="hidden" />
+
+### Keyboard Navigation
+
+Tab through toolbar buttons and activate with Enter or Space.
+
+<Canvas of={RichTextEditorStories.KeyboardNavigation} sourceState="hidden" />
+
+## Props
+
+### Root
+
+<p className="text-sm text-muted mb-4">
+  Wraps the Slate provider and manages editor state. See <a className="text-link underline" href="https://docs.slatejs.org/walkthroughs/01-installing-slate" target="_blank" rel="noopener noreferrer">Slate documentation</a> for more details.
+</p>
+
+#### Custom Props
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `initialValue` | `Descendant[]` | Default sample content | No | Initial content for the editor in Slate document format |
+| `onChange` | `(value: Descendant[]) => void` | - | No | Callback fired when content changes |
+| `children` | `ReactNode` | - | Yes | Child components (Toolbar, Editable, etc.) |
+| `className` | `string` | - | No | Classes applied to the root container |
+
+### Toolbar
+
+<p className="text-sm text-muted mb-4">
+  Container for formatting buttons. See <a className="text-link underline" href="https://docs.slatejs.org/walkthroughs/02-adding-event-handlers" target="_blank" rel="noopener noreferrer">Slate event handlers</a> for context.
+</p>
+
+#### Custom Props
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `children` | `ReactNode` | - | Yes | Toolbar content (MarkButton, BlockButton, Separator, etc.) |
+| `className` | `string` | - | No | Classes applied to the toolbar element |
+
+### MarkButton
+
+<p className="text-sm text-muted mb-4">
+  Button for toggling inline text formatting. See <a className="text-link underline" href="https://docs.slatejs.org/walkthroughs/03-defining-custom-elements" target="_blank" rel="noopener noreferrer">Slate custom elements</a> for more.
+</p>
+
+#### Custom Props
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `format` | `'bold' \| 'italic' \| 'underline' \| 'code'` | - | Yes | The text mark format to toggle |
+| `icon` | `ReactNode` | - | Yes | Icon element to display in the button |
+| `className` | `string` | - | No | Classes applied to the button element |
+
+### BlockButton
+
+<p className="text-sm text-muted mb-4">
+  Button for toggling block-level formatting. See <a className="text-link underline" href="https://docs.slatejs.org/walkthroughs/03-defining-custom-elements" target="_blank" rel="noopener noreferrer">Slate custom elements</a> for more.
+</p>
+
+#### Custom Props
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `format` | `BlockFormat` | - | Yes | The block format to toggle (block type or alignment) |
+| `icon` | `ReactNode` | - | Yes | Icon element to display in the button |
+| `className` | `string` | - | No | Classes applied to the button element |
+
+#### Block Format Types
+
+<Source
+  code={`type BlockFormat =
+  | 'paragraph'
+  | 'heading-one'
+  | 'heading-two'
+  | 'block-quote'
+  | 'bulleted-list'
+  | 'numbered-list'
+  | 'left'
+  | 'center'
+  | 'right'
+  | 'justify'`}
+  language="tsx"
+/>
+
+### Editable
+
+<p className="text-sm text-muted mb-4">
+  The contenteditable area. See <a className="text-link underline" href="https://docs.slatejs.org/api/slate-react/editable" target="_blank" rel="noopener noreferrer">Slate Editable API</a> for full prop reference.
+</p>
+
+#### Custom Props
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `placeholder` | `string` | `'Enter some text...'` | No | Placeholder text when editor is empty |
+| `autoFocus` | `boolean` | `false` | No | Auto-focus the editor on mount |
+| `spellCheck` | `boolean` | `true` | No | Enable browser spell checking |
+| `readOnly` | `boolean` | `false` | No | Disable editing |
+| `renderElement` | `(props: RenderElementProps) => JSX.Element` | - | No | Custom element renderer |
+| `renderLeaf` | `(props: RenderLeafProps) => JSX.Element` | - | No | Custom leaf (text) renderer |
+| `className` | `string` | - | No | Classes applied to the editable area |
+
+### Separator
+
+#### Custom Props
+
+| Prop | Type | Default | Required | Description |
+|------|------|---------|----------|-------------|
+| `className` | `string` | - | No | Classes applied to the separator element |
+
+## Accessibility
+
+The RichTextEditor is built with accessibility in mind, providing proper ARIA attributes and keyboard support.
+
+- **Toolbar role** - The toolbar has `role="toolbar"` with `aria-label="Formatting options"`
+- **Toggle buttons** - Each button uses `aria-pressed` to indicate active/inactive state
+- **Button labels** - All buttons have descriptive `aria-label` attributes (e.g., "Toggle bold")
+- **Separators** - Visual dividers have `role="separator"` and `aria-orientation="vertical"`
+- **Keyboard shortcuts** - Common formatting shortcuts work within the editor
+
+### Keyboard Shortcuts
+
+| Key | Action |
+|-----|--------|
+| `Tab` | Navigate between toolbar buttons |
+| `Enter` / `Space` | Activate the focused toolbar button |
+| `Ctrl/Cmd + B` | Toggle bold |
+| `Ctrl/Cmd + I` | Toggle italic |
+| `Ctrl/Cmd + U` | Toggle underline |
+| `Ctrl/Cmd + \`` | Toggle inline code |
+
+## Guidelines
+
+### Do
+
+- Use semantic heading levels (heading-one before heading-two) for proper document structure
+- Provide a meaningful placeholder to guide users
+- Include only the formatting options relevant to your use case
+- Use the onChange callback to persist content
+- Group related toolbar buttons with Separators for better visual organization
+
+### Don't
+
+- Include every formatting option if users only need basic formatting
+- Skip the Toolbar entirely unless displaying read-only content
+- Forget to handle the content value if you need to save or process it
+- Mix too many heading levels in short documents
+- Rely solely on visual formatting - ensure semantic markup (strong, em) is rendered
