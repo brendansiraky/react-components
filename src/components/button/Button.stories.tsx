@@ -1,8 +1,13 @@
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Button } from './Button'
 
-export default {
-  title: 'Button',
+const meta = {
+  title: 'Components/Button',
   component: Button,
-}
+  tags: ['autodocs'],
+} satisfies Meta<typeof Button>
 
-export const Default = () => <Button />
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {}
