@@ -294,10 +294,16 @@ cn('px-2', 'px-4')                        // Conflict resolution → 'px-4'
 
 ## After Code Changes
 
-**IMPORTANT:** After completing any code changes, always run the TypeScript compiler to verify there are no type errors:
+**IMPORTANT:** After completing any code changes, run these verification steps:
 
-```bash
-npm run typecheck
-```
+1. **TypeScript check** - Verify there are no type errors:
+   ```bash
+   npm run typecheck
+   ```
 
-This ensures all types are correct and the code will compile successfully. Do not consider a task complete until `typecheck` passes without errors.
+2. **Dev server** - Boot up the dev server to verify the app runs:
+   ```bash
+   npm run dev
+   ```
+
+Do not consider a task complete until both checks pass without errors.
