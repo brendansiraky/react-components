@@ -29,14 +29,14 @@ src/components/[ComponentName]/[ComponentName].mdx
 ## Required Imports
 
 ```mdx
-import { Meta, Title, Subtitle, Description, Primary, Controls, Stories, Source, Canvas, Story, ArgTypes } from '@storybook/blocks'
+import { Meta, Title, Subtitle, Description, Primary, Controls, Stories, Source, Canvas, Story, ArgTypes } from '@storybook/addon-docs/blocks'
 import * as ComponentStories from './ComponentName.stories'
 ```
 
 ## MDX Documentation Structure
 
 ```mdx
-import { Meta, Title, Subtitle, Description, Primary, Controls, Stories, Canvas, ArgTypes } from '@storybook/blocks'
+import { Meta, Title, Subtitle, Description, Primary, Controls, Stories, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
 import * as ComponentStories from './ComponentName.stories'
 import { ComponentName } from '.'
 

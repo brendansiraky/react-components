@@ -93,7 +93,7 @@ Check @package.json and @tsconfig.json for consistency.
 
 ## Bash Execution
 
-Execute bash commands inline with `!` backticks. Requires `allowed-tools` with Bash:
+Execute bash commands inline by prefixing them with an exclamation mark inside backticks (see examples below). Requires `allowed-tools` with Bash:
 
 ```markdown
 ---

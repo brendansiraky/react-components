@@ -1,6 +1,7 @@
 ---
 description: Build a complete component with stories and documentation
 argument-hint: <component description or requirements>
+allowed-tools: Bash(npm run typecheck:*), Bash(npm run storybook:*)
 ---
 
 Build a complete React component with Storybook stories and MDX documentation by running three specialized agents in sequence.
@@ -92,12 +93,12 @@ Create [ComponentName].mdx with:
 - Related links (Radix docs if applicable)
 ```
 
-## Verification
+## Verification & Launch
 
 After all three agents complete:
 
 1. Run `npm run typecheck` to verify no type errors
-2. Run `npm run storybook` to verify the component renders correctly
+2. Start Storybook with `npm run storybook` so the user can see the new component
 
 ## Output
 

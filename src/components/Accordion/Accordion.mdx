@@ -1,0 +1,190 @@
+import {
+    Meta,
+    Title,
+    Subtitle,
+    Description,
+    Primary,
+    Controls,
+    Canvas,
+    ArgTypes,
+} from '@storybook/addon-docs/blocks'
+import * as AccordionStories from './Accordion.stories'
+import { Accordion } from '.'
+
+<Meta of={AccordionStories} />
+
+<Title>Accordion</Title>
+
+<Subtitle>
+    A vertically stacked set of interactive headings that reveal or hide
+    associated content.
+</Subtitle>
+
+<Description>
+The Accordion component provides a way to organize content into collapsible sections,
+allowing users to show and hide content as needed. It supports both single and multiple
+expansion modes, keyboard navigation, and smooth animations.
+
+Built on top of [Radix UI Accordion](https://www.radix-ui.com/primitives/docs/components/accordion),
+this component comes with styled defaults while maintaining full accessibility support.
+
+</Description>
+
+<Primary />
+
+<Controls />
+
+## Usage
+
+```tsx
+import { Accordion } from '@/components/Accordion'
+
+;<Accordion.Root type='single' collapsible>
+    <Accordion.Item value='item-1'>
+        <Accordion.Header>
+            <Accordion.Trigger>Section Title</Accordion.Trigger>
+        </Accordion.Header>
+        <Accordion.Content>Section content goes here.</Accordion.Content>
+    </Accordion.Item>
+</Accordion.Root>
+```
+
+## Anatomy
+
+The Accordion is composed of five primitives that work together:
+
+- **Root** - Container that manages accordion state and provides context to child items
+- **Item** - Wraps a single collapsible section (header + content)
+- **Header** - Semantic wrapper for the trigger, renders as an `h3` by default
+- **Trigger** - Button that toggles the expanded/collapsed state
+- **Content** - Container for the collapsible content with animated height transitions
+
+```tsx
+<Accordion.Root>
+    <Accordion.Item>
+        <Accordion.Header>
+            <Accordion.Trigger />
+        </Accordion.Header>
+        <Accordion.Content />
+    </Accordion.Item>
+</Accordion.Root>
+```
+
+## Examples
+
+### Default (Single Mode)
+
+In single mode with `collapsible` enabled, only one item can be open at a time, and clicking an open item will close it.
+
+<Canvas of={AccordionStories.Default} />
+
+### Multiple Mode
+
+Set `type="multiple"` to allow multiple items to be expanded simultaneously.
+
+<Canvas of={AccordionStories.MultipleMode} />
+
+### Default Expanded
+
+Use `defaultValue` to specify which item(s) should be expanded on initial render.
+
+<Canvas of={AccordionStories.DefaultExpanded} />
+
+### Multiple Default Expanded
+
+In multiple mode, pass an array to `defaultValue` to expand multiple items by default.
+
+<Canvas of={AccordionStories.DefaultExpandedMultiple} />
+
+### Disabled Item
+
+Individual items can be disabled by setting the `disabled` prop on `Accordion.Item`.
+
+<Canvas of={AccordionStories.DisabledItem} />
+
+### Keyboard Navigation
+
+The accordion supports full keyboard navigation including arrow keys, Home, and End.
+
+<Canvas of={AccordionStories.KeyboardNavigation} />
+
+## API Reference
+
+### Root
+
+Container component that manages the accordion state. Must wrap all accordion items.
+
+| Prop            | Type                     | Default | Description                                    |
+| --------------- | ------------------------ | ------- | ---------------------------------------------- |
+| `type`          | `"single" \| "multiple"` | -       | Whether only one or multiple items can be open |
+| `value`         | `string \| string[]`     | -       | Controlled open state                          |
+| `defaultValue`  | `string \| string[]`     | -       | Default open item(s)                           |
+| `collapsible`   | `boolean`                | `false` | Allow closing all items (single mode only)     |
+| `disabled`      | `boolean`                | `false` | Disable all items                              |
+| `onValueChange` | `(value) => void`        | -       | Callback when open state changes               |
+| `className`     | `string`                 | -       | Additional CSS classes                         |
+
+### Item
+
+Wraps a single accordion section containing a header and content.
+
+| Prop        | Type      | Default | Description                               |
+| ----------- | --------- | ------- | ----------------------------------------- |
+| `value`     | `string`  | -       | Unique identifier for the item (required) |
+| `disabled`  | `boolean` | `false` | Disable this item                         |
+| `className` | `string`  | -       | Additional CSS classes                    |
+
+### Header
+
+Semantic wrapper for the trigger element. Renders as an `h3` by default.
+
+| Prop        | Type      | Default | Description                    |
+| ----------- | --------- | ------- | ------------------------------ |
+| `asChild`   | `boolean` | `false` | Merge props onto child element |
+| `className` | `string`  | -       | Additional CSS classes         |
+
+### Trigger
+
+Button that toggles the expanded state of the associated content.
+
+| Prop        | Type      | Default | Description                    |
+| ----------- | --------- | ------- | ------------------------------ |
+| `asChild`   | `boolean` | `false` | Merge props onto child element |
+| `className` | `string`  | -       | Additional CSS classes         |
+
+### Content
+
+Container for the collapsible content with animated height transitions.
+
+| Prop         | Type      | Default | Description                         |
+| ------------ | --------- | ------- | ----------------------------------- |
+| `forceMount` | `boolean` | -       | Force content to render when closed |
+| `className`  | `string`  | -       | Additional CSS classes              |
+
+## Accessibility
+
+The Accordion component follows the [WAI-ARIA Accordion Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/).
+
+### Keyboard Navigation
+
+| Key               | Action                                       |
+| ----------------- | -------------------------------------------- |
+| `Enter` / `Space` | Toggle the focused item                      |
+| `Tab`             | Move focus to the next focusable element     |
+| `Shift + Tab`     | Move focus to the previous focusable element |
+| `ArrowDown`       | Move focus to the next trigger               |
+| `ArrowUp`         | Move focus to the previous trigger           |
+| `Home`            | Move focus to the first trigger              |
+| `End`             | Move focus to the last trigger               |
+
+### ARIA Attributes
+
+- Each trigger has `aria-expanded` indicating the current state
+- Each trigger has `aria-controls` pointing to its content panel
+- Each content panel has `aria-labelledby` pointing to its trigger
+- The header uses appropriate heading semantics (`h3` by default)
+
+## Related
+
+- [Radix UI Accordion](https://www.radix-ui.com/primitives/docs/components/accordion) - The underlying primitive
+- [WAI-ARIA Accordion Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/) - Accessibility guidelines
