@@ -197,12 +197,22 @@ export function Root({ className, ...props }: RootProps) {
 - Use semantic HTML elements
 - Test with screen readers in mind
 
-## After Completion
+## Verification (Required)
 
-Run typecheck to verify:
-```bash
-npm run typecheck
-```
+**Your task is NOT complete until these checks pass:**
+
+1. **TypeScript check** - Verify there are no type errors:
+   ```bash
+   npm run typecheck
+   ```
+
+2. **Dev server** - Boot up the dev server to verify the app runs:
+   ```bash
+   npm run dev
+   ```
+   Check the output for errors. If the server starts successfully, you can stop it.
+
+If either check fails, fix the issues before considering the task complete.
 
 ## Do NOT
 
@@ -210,5 +220,6 @@ npm run typecheck
 - Skip creating any required files
 - Forget JSDoc comments on type definitions
 - Use inline styles instead of Tailwind
-- Forget to run typecheck after completion
 - Create components without the compositional pattern
+- Consider the task complete without running verification checks
+- Leave TypeScript errors or build failures unresolved

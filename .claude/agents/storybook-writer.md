@@ -1,7 +1,7 @@
 ---
 name: storybook-writer
 description: Creates Storybook stories with interactive tests using play functions. Use when asked to "write stories", "create storybook", "add story tests", or "test component interactions".
-tools: Read, Edit, Write, Grep, Glob
+tools: Read, Edit, Write, Grep, Glob, Bash
 model: opus
 ---
 
@@ -174,6 +174,26 @@ Use queries in this priority order:
 - `DisabledState` - Disabled behavior
 - `MultipleSelection` - Multi-select behavior
 
+## Verification (Required)
+
+**Your task is NOT complete until these checks pass:**
+
+1. **TypeScript check** - Verify there are no type errors:
+   ```bash
+   npm run typecheck
+   ```
+
+2. **Run Storybook tests** - Verify all play function tests pass:
+   ```bash
+   npm run test-storybook
+   ```
+   If no test-storybook script exists, start Storybook and verify stories render without errors:
+   ```bash
+   npm run storybook
+   ```
+
+If either check fails, fix the issues before considering the task complete.
+
 ## Do NOT
 
 - Work on more than one component at a time
@@ -181,3 +201,5 @@ Use queries in this priority order:
 - Use `data-testid` when accessible queries work
 - Skip reading the component implementation first
 - Guess at component structure - always read the files
+- Consider the task complete without running verification checks
+- Leave TypeScript errors or failing tests unresolved
