@@ -9,6 +9,7 @@ import isHotkey from 'is-hotkey'
 import { cn } from '../../../lib/utils'
 import { HOTKEYS } from '../constants'
 import { toggleMark, isAlignElement } from '../utils'
+import { TablePopover } from './TablePopover'
 import type { EditableProps, CustomElement, CustomText, TextAlign } from '../types'
 
 function DefaultElement({ attributes, children, element }: RenderElementProps) {
@@ -57,6 +58,23 @@ function DefaultElement({ attributes, children, element }: RenderElementProps) {
         <ol className="ml-6 list-decimal" style={style} {...attributes}>
           {children}
         </ol>
+      )
+    case 'table':
+      return (
+        <TablePopover attributes={attributes}>
+          <tbody>{children}</tbody>
+        </TablePopover>
+      )
+    case 'table-row':
+      return <tr {...attributes}>{children}</tr>
+    case 'table-cell':
+      return (
+        <td
+          className="border border-gray-300 p-2 dark:border-gray-600"
+          {...attributes}
+        >
+          {children}
+        </td>
       )
     default:
       return (

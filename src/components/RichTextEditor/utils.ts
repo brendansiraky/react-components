@@ -1,5 +1,15 @@
 import { Editor, Element as SlateElement, Transforms } from 'slate'
-import type { CustomEditor, TextMark, BlockFormat, TextAlign, BlockType, CustomElement } from './types'
+import type {
+  CustomEditor,
+  TextMark,
+  BlockFormat,
+  TextAlign,
+  BlockType,
+  CustomElement,
+  TableElement,
+  TableRowElement,
+  TableCellElement,
+} from './types'
 import { LIST_TYPES, TEXT_ALIGN_TYPES } from './constants'
 
 /**
@@ -106,5 +116,211 @@ export function toggleBlock(editor: CustomEditor, format: BlockFormat): void {
   if (!isActive && isList) {
     const block = { type: format, children: [] }
     Transforms.wrapNodes(editor, block)
+  }
+}
+
+/**
+ * Check if cursor is currently inside a table.
+ */
+export function isTableActive(editor: CustomEditor): boolean {
+  const { selection } = editor
+  if (!selection) return false
+
+  const [match] = Array.from(
+    Editor.nodes(editor, {
+      at: Editor.unhangRange(editor, selection),
+      match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'table',
+    })
+  )
+
+  return !!match
+}
+
+/**
+ * Create an empty table cell.
+ */
+function createTableCell(): TableCellElement {
+  return {
+    type: 'table-cell',
+    children: [{ text: '' }],
+  }
+}
+
+/**
+ * Create a table row with the specified number of cells.
+ */
+function createTableRow(columns: number): TableRowElement {
+  return {
+    type: 'table-row',
+    children: Array.from({ length: columns }, () => createTableCell()),
+  }
+}
+
+/**
+ * Create a table with the specified dimensions.
+ */
+function createTable(rows: number, columns: number): TableElement {
+  return {
+    type: 'table',
+    children: Array.from({ length: rows }, () => createTableRow(columns)),
+  }
+}
+
+/**
+ * Insert a table at the current selection.
+ */
+export function insertTable(editor: CustomEditor, rows = 3, columns = 3): void {
+  if (isTableActive(editor)) {
+    return // Don't insert nested tables
+  }
+
+  const table = createTable(rows, columns)
+  Transforms.insertNodes(editor, table)
+}
+
+/**
+ * Delete the table at the current selection.
+ */
+export function deleteTable(editor: CustomEditor): void {
+  Transforms.removeNodes(editor, {
+    match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'table',
+  })
+}
+
+/**
+ * Insert a row below the current row.
+ */
+export function insertTableRow(editor: CustomEditor): void {
+  const { selection } = editor
+  if (!selection) return
+
+  const [tableEntry] = Array.from(
+    Editor.nodes(editor, {
+      match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'table',
+    })
+  )
+
+  if (!tableEntry) return
+
+  const [rowEntry] = Array.from(
+    Editor.nodes(editor, {
+      match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'table-row',
+    })
+  )
+
+  if (!rowEntry) return
+
+  const [rowNode, rowPath] = rowEntry
+  const rowElement = rowNode as TableRowElement
+  const columnCount = rowElement.children.length
+
+  const newRow = createTableRow(columnCount)
+  const insertPath = [...rowPath.slice(0, -1), rowPath[rowPath.length - 1] + 1]
+
+  Transforms.insertNodes(editor, newRow, { at: insertPath })
+}
+
+/**
+ * Insert a column to the right of the current column.
+ */
+export function insertTableColumn(editor: CustomEditor): void {
+  const { selection } = editor
+  if (!selection) return
+
+  const [tableEntry] = Array.from(
+    Editor.nodes(editor, {
+      match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'table',
+    })
+  )
+
+  if (!tableEntry) return
+
+  const [cellEntry] = Array.from(
+    Editor.nodes(editor, {
+      match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'table-cell',
+    })
+  )
+
+  if (!cellEntry) return
+
+  const [, cellPath] = cellEntry
+  const columnIndex = cellPath[cellPath.length - 1]
+
+  const [tableNode] = tableEntry
+  const tableElement = tableNode as TableElement
+
+  // Insert a new cell in each row at columnIndex + 1
+  tableElement.children.forEach((_, rowIndex) => {
+    const newCell = createTableCell()
+    const insertPath = [cellPath[0], rowIndex, columnIndex + 1]
+    Transforms.insertNodes(editor, newCell, { at: insertPath })
+  })
+}
+
+/**
+ * Delete the current row.
+ */
+export function deleteTableRow(editor: CustomEditor): void {
+  const [tableEntry] = Array.from(
+    Editor.nodes(editor, {
+      match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'table',
+    })
+  )
+
+  if (!tableEntry) return
+
+  const [tableNode] = tableEntry
+  const tableElement = tableNode as TableElement
+
+  // Don't delete if only one row
+  if (tableElement.children.length <= 1) {
+    deleteTable(editor)
+    return
+  }
+
+  Transforms.removeNodes(editor, {
+    match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'table-row',
+  })
+}
+
+/**
+ * Delete the current column.
+ */
+export function deleteTableColumn(editor: CustomEditor): void {
+  const { selection } = editor
+  if (!selection) return
+
+  const [tableEntry] = Array.from(
+    Editor.nodes(editor, {
+      match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'table',
+    })
+  )
+
+  if (!tableEntry) return
+
+  const [cellEntry] = Array.from(
+    Editor.nodes(editor, {
+      match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'table-cell',
+    })
+  )
+
+  if (!cellEntry) return
+
+  const [, cellPath] = cellEntry
+  const columnIndex = cellPath[cellPath.length - 1]
+
+  const [tableNode, tablePath] = tableEntry
+  const tableElement = tableNode as TableElement
+
+  // Don't delete if only one column
+  if (tableElement.children[0]?.children.length <= 1) {
+    deleteTable(editor)
+    return
+  }
+
+  // Remove the cell at columnIndex from each row
+  for (let rowIndex = tableElement.children.length - 1; rowIndex >= 0; rowIndex--) {
+    const removePath = [...tablePath, rowIndex, columnIndex]
+    Transforms.removeNodes(editor, { at: removePath })
   }
 }

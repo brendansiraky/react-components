@@ -317,3 +317,158 @@ export function AlignJustifyIcon(props: IconProps) {
     </svg>
   )
 }
+
+/**
+ * Table icon
+ */
+export function TableIcon(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      width="18"
+      height="18"
+      {...props}
+    >
+      <path d="M12 3v18" />
+      <rect width="18" height="18" x="3" y="3" rx="2" />
+      <path d="M3 9h18" />
+      <path d="M3 15h18" />
+    </svg>
+  )
+}
+
+/**
+ * Table row insert icon (row with plus)
+ */
+export function TableRowInsertIcon(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      width="18"
+      height="18"
+      {...props}
+    >
+      <path d="M3 6h18" />
+      <path d="M3 12h12" />
+      <path d="M3 18h12" />
+      <path d="M19 15v6" />
+      <path d="M16 18h6" />
+    </svg>
+  )
+}
+
+/**
+ * Table row delete icon (row with X)
+ */
+export function TableRowDeleteIcon(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      width="18"
+      height="18"
+      {...props}
+    >
+      <path d="M3 6h18" />
+      <path d="M3 12h12" />
+      <path d="M3 18h12" />
+      <path d="M16 16l4 4" />
+      <path d="M20 16l-4 4" />
+    </svg>
+  )
+}
+
+/**
+ * Table column insert icon (column with plus)
+ */
+export function TableColumnInsertIcon(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      width="18"
+      height="18"
+      {...props}
+    >
+      <path d="M6 3v18" />
+      <path d="M12 3v12" />
+      <path d="M18 3v12" />
+      <path d="M15 19h6" />
+      <path d="M18 16v6" />
+    </svg>
+  )
+}
+
+/**
+ * Table column delete icon (column with X)
+ */
+export function TableColumnDeleteIcon(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      width="18"
+      height="18"
+      {...props}
+    >
+      <path d="M6 3v18" />
+      <path d="M12 3v12" />
+      <path d="M18 3v12" />
+      <path d="M15 16l4 4" />
+      <path d="M19 16l-4 4" />
+    </svg>
+  )
+}
+
+/**
+ * Table delete icon (trash can)
+ */
+export function TableDeleteIcon(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      width="18"
+      height="18"
+      {...props}
+    >
+      <path d="M3 6h18" />
+      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+      <line x1="10" y1="11" x2="10" y2="17" />
+      <line x1="14" y1="11" x2="14" y2="17" />
+    </svg>
+  )
+}

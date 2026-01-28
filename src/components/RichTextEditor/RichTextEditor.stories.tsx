@@ -15,6 +15,7 @@ import {
   AlignCenterIcon,
   AlignRightIcon,
   AlignJustifyIcon,
+  TableIcon,
 } from './icons'
 
 const meta = {
@@ -687,5 +688,316 @@ export const EmptyWithPlaceholder: Story = {
 
     await expect(boldButton).toHaveAttribute('aria-pressed', 'false')
     await expect(italicButton).toHaveAttribute('aria-pressed', 'false')
+  },
+}
+
+/**
+ * Editor with table support. Click the table button to insert a 3x3 table.
+ */
+export const WithTable: Story = {
+  render: () => (
+    <div className="w-[600px]">
+      <RichTextEditor.Root
+        initialValue={[
+          {
+            type: 'paragraph',
+            children: [{ text: 'Click the table button to insert a table:' }],
+          },
+        ]}
+      >
+        <RichTextEditor.Toolbar>
+          <RichTextEditor.MarkButton format="bold" icon={<BoldIcon />} />
+          <RichTextEditor.MarkButton format="italic" icon={<ItalicIcon />} />
+          <RichTextEditor.Separator />
+          <RichTextEditor.TableButton icon={<TableIcon />} />
+        </RichTextEditor.Toolbar>
+        <RichTextEditor.Editable placeholder="Start typing..." />
+      </RichTextEditor.Root>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    // Verify table button is present
+    const tableButton = canvas.getByRole('button', { name: /insert table/i })
+    await expect(tableButton).toBeVisible()
+    await expect(tableButton).toHaveAttribute('aria-pressed', 'false')
+
+    // Click to insert a table
+    await userEvent.click(tableButton)
+
+    // Verify table was inserted
+    const table = canvas.getByRole('table')
+    await expect(table).toBeVisible()
+
+    // Verify table has correct structure (3 rows)
+    const rows = canvas.getAllByRole('row')
+    await expect(rows.length).toBe(3)
+
+    // Verify each row has 3 cells (total 9 cells)
+    const cells = canvas.getAllByRole('cell')
+    await expect(cells.length).toBe(9)
+
+    // Button should now show active state (cursor is inside table)
+    await expect(tableButton).toHaveAttribute('aria-pressed', 'true')
+  },
+}
+
+/**
+ * Editor with pre-existing table content demonstrating table rendering.
+ */
+export const WithTableContent: Story = {
+  render: () => (
+    <div className="w-[600px]">
+      <RichTextEditor.Root
+        initialValue={[
+          {
+            type: 'heading-two',
+            children: [{ text: 'Product Comparison' }],
+          },
+          {
+            type: 'table',
+            children: [
+              {
+                type: 'table-row',
+                children: [
+                  { type: 'table-cell', children: [{ text: 'Feature', bold: true }] },
+                  { type: 'table-cell', children: [{ text: 'Basic', bold: true }] },
+                  { type: 'table-cell', children: [{ text: 'Pro', bold: true }] },
+                ],
+              },
+              {
+                type: 'table-row',
+                children: [
+                  { type: 'table-cell', children: [{ text: 'Storage' }] },
+                  { type: 'table-cell', children: [{ text: '5 GB' }] },
+                  { type: 'table-cell', children: [{ text: '100 GB' }] },
+                ],
+              },
+              {
+                type: 'table-row',
+                children: [
+                  { type: 'table-cell', children: [{ text: 'Users' }] },
+                  { type: 'table-cell', children: [{ text: '1' }] },
+                  { type: 'table-cell', children: [{ text: 'Unlimited' }] },
+                ],
+              },
+            ],
+          },
+          {
+            type: 'paragraph',
+            children: [{ text: 'Choose the plan that fits your needs.' }],
+          },
+        ]}
+      >
+        <RichTextEditor.Toolbar>
+          <RichTextEditor.MarkButton format="bold" icon={<BoldIcon />} />
+          <RichTextEditor.MarkButton format="italic" icon={<ItalicIcon />} />
+          <RichTextEditor.Separator />
+          <RichTextEditor.TableButton icon={<TableIcon />} />
+        </RichTextEditor.Toolbar>
+        <RichTextEditor.Editable />
+      </RichTextEditor.Root>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    // Verify heading renders
+    const heading = canvas.getByRole('heading', { level: 2 })
+    await expect(heading).toBeVisible()
+    await expect(heading).toHaveTextContent('Product Comparison')
+
+    // Verify table renders
+    const table = canvas.getByRole('table')
+    await expect(table).toBeVisible()
+
+    // Verify table structure
+    const rows = canvas.getAllByRole('row')
+    await expect(rows.length).toBe(3)
+
+    const cells = canvas.getAllByRole('cell')
+    await expect(cells.length).toBe(9)
+
+    // Verify specific cell content
+    await expect(canvas.getByText('Feature')).toBeVisible()
+    await expect(canvas.getByText('Basic')).toBeVisible()
+    await expect(canvas.getByText('Pro')).toBeVisible()
+    await expect(canvas.getByText('Storage')).toBeVisible()
+    await expect(canvas.getByText('5 GB')).toBeVisible()
+    await expect(canvas.getByText('100 GB')).toBeVisible()
+
+    // Verify paragraph after table renders
+    await expect(canvas.getByText('Choose the plan that fits your needs.')).toBeVisible()
+  },
+}
+
+/**
+ * Editor with custom table dimensions (2x4 table).
+ */
+export const WithCustomTableSize: Story = {
+  render: () => (
+    <div className="w-[600px]">
+      <RichTextEditor.Root
+        initialValue={[
+          {
+            type: 'paragraph',
+            children: [{ text: 'This table button inserts a 2x4 table:' }],
+          },
+        ]}
+      >
+        <RichTextEditor.Toolbar>
+          <RichTextEditor.TableButton icon={<TableIcon />} rows={2} columns={4} />
+        </RichTextEditor.Toolbar>
+        <RichTextEditor.Editable />
+      </RichTextEditor.Root>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    // Click to insert a table
+    const tableButton = canvas.getByRole('button', { name: /insert table/i })
+    await userEvent.click(tableButton)
+
+    // Verify table was inserted with custom dimensions
+    const table = canvas.getByRole('table')
+    await expect(table).toBeVisible()
+
+    // Verify 2 rows
+    const rows = canvas.getAllByRole('row')
+    await expect(rows.length).toBe(2)
+
+    // Verify 8 cells (2 rows x 4 columns)
+    const cells = canvas.getAllByRole('cell')
+    await expect(cells.length).toBe(8)
+  },
+}
+
+/**
+ * Full-featured editor with all formatting options including tables.
+ */
+export const FullToolbarWithTables: Story = {
+  render: () => (
+    <div className="w-[600px]">
+      <RichTextEditor.Root>
+        <RichTextEditor.Toolbar>
+          <RichTextEditor.MarkButton format="bold" icon={<BoldIcon />} />
+          <RichTextEditor.MarkButton format="italic" icon={<ItalicIcon />} />
+          <RichTextEditor.MarkButton format="underline" icon={<UnderlineIcon />} />
+          <RichTextEditor.MarkButton format="code" icon={<CodeIcon />} />
+          <RichTextEditor.Separator />
+          <RichTextEditor.BlockButton format="heading-one" icon={<Heading1Icon />} />
+          <RichTextEditor.BlockButton format="heading-two" icon={<Heading2Icon />} />
+          <RichTextEditor.BlockButton format="block-quote" icon={<QuoteIcon />} />
+          <RichTextEditor.Separator />
+          <RichTextEditor.BlockButton format="numbered-list" icon={<ListOrderedIcon />} />
+          <RichTextEditor.BlockButton format="bulleted-list" icon={<ListUnorderedIcon />} />
+          <RichTextEditor.Separator />
+          <RichTextEditor.BlockButton format="left" icon={<AlignLeftIcon />} />
+          <RichTextEditor.BlockButton format="center" icon={<AlignCenterIcon />} />
+          <RichTextEditor.BlockButton format="right" icon={<AlignRightIcon />} />
+          <RichTextEditor.BlockButton format="justify" icon={<AlignJustifyIcon />} />
+          <RichTextEditor.Separator />
+          <RichTextEditor.TableButton icon={<TableIcon />} />
+        </RichTextEditor.Toolbar>
+        <RichTextEditor.Editable placeholder="Create rich content with tables..." />
+      </RichTextEditor.Root>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    // Verify all buttons are present
+    await expect(canvas.getByRole('button', { name: /toggle bold/i })).toBeVisible()
+    await expect(canvas.getByRole('button', { name: /toggle italic/i })).toBeVisible()
+    await expect(canvas.getByRole('button', { name: /insert table/i })).toBeVisible()
+
+    // Verify 5 separators (marks | headings/quote | lists | alignment | table)
+    const separators = canvas.getAllByRole('separator')
+    await expect(separators.length).toBe(5)
+  },
+}
+
+/**
+ * Tests the table popover for row/column management.
+ * Click on the table to show the popover with table actions.
+ */
+export const TablePopoverActions: Story = {
+  render: () => (
+    <div className="w-[600px]">
+      <RichTextEditor.Root
+        initialValue={[
+          {
+            type: 'paragraph',
+            children: [{ text: 'Click on the table below to see the action popover:' }],
+          },
+          {
+            type: 'table',
+            children: [
+              {
+                type: 'table-row',
+                children: [
+                  { type: 'table-cell', children: [{ text: 'A1' }] },
+                  { type: 'table-cell', children: [{ text: 'B1' }] },
+                  { type: 'table-cell', children: [{ text: 'C1' }] },
+                ],
+              },
+              {
+                type: 'table-row',
+                children: [
+                  { type: 'table-cell', children: [{ text: 'A2' }] },
+                  { type: 'table-cell', children: [{ text: 'B2' }] },
+                  { type: 'table-cell', children: [{ text: 'C2' }] },
+                ],
+              },
+              {
+                type: 'table-row',
+                children: [
+                  { type: 'table-cell', children: [{ text: 'A3' }] },
+                  { type: 'table-cell', children: [{ text: 'B3' }] },
+                  { type: 'table-cell', children: [{ text: 'C3' }] },
+                ],
+              },
+            ],
+          },
+          {
+            type: 'paragraph',
+            children: [{ text: 'Use the popover to add/remove rows and columns.' }],
+          },
+        ]}
+      >
+        <RichTextEditor.Toolbar>
+          <RichTextEditor.MarkButton format="bold" icon={<BoldIcon />} />
+          <RichTextEditor.MarkButton format="italic" icon={<ItalicIcon />} />
+          <RichTextEditor.Separator />
+          <RichTextEditor.TableButton icon={<TableIcon />} />
+        </RichTextEditor.Toolbar>
+        <RichTextEditor.Editable />
+      </RichTextEditor.Root>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    // Verify table is present
+    const table = canvas.getByRole('table')
+    await expect(table).toBeVisible()
+
+    // Verify initial table structure (3x3)
+    let rows = canvas.getAllByRole('row')
+    await expect(rows.length).toBe(3)
+    let cells = canvas.getAllByRole('cell')
+    await expect(cells.length).toBe(9)
+
+    // Click on the table to open popover
+    await userEvent.click(table)
+
+    // Verify popover actions are visible
+    await expect(canvas.getByRole('button', { name: /insert row below/i })).toBeVisible()
+    await expect(canvas.getByRole('button', { name: /delete row/i })).toBeVisible()
+    await expect(canvas.getByRole('button', { name: /insert column right/i })).toBeVisible()
+    await expect(canvas.getByRole('button', { name: /delete column/i })).toBeVisible()
+    await expect(canvas.getByRole('button', { name: /delete table/i })).toBeVisible()
   },
 }

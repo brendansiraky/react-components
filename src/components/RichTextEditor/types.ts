@@ -24,6 +24,9 @@ export type BlockType =
   | 'bulleted-list'
   | 'numbered-list'
   | 'list-item'
+  | 'table'
+  | 'table-row'
+  | 'table-cell'
 
 /**
  * Block format including both block types and alignment.
@@ -112,6 +115,30 @@ export interface ListItemElement extends BaseCustomElement {
 }
 
 /**
+ * Table element.
+ */
+export interface TableElement extends BaseCustomElement {
+  type: 'table'
+  children: TableRowElement[]
+}
+
+/**
+ * Table row element.
+ */
+export interface TableRowElement extends BaseCustomElement {
+  type: 'table-row'
+  children: TableCellElement[]
+}
+
+/**
+ * Table cell element.
+ */
+export interface TableCellElement extends BaseCustomElement {
+  type: 'table-cell'
+  children: CustomText[]
+}
+
+/**
  * Union of all custom element types.
  */
 export type CustomElement =
@@ -122,6 +149,9 @@ export type CustomElement =
   | BulletedListElement
   | NumberedListElement
   | ListItemElement
+  | TableElement
+  | TableRowElement
+  | TableCellElement
 
 /**
  * Custom editor type combining Slate's BaseEditor with React and History plugins.
@@ -245,6 +275,42 @@ export interface EditableProps extends Omit<ComponentPropsWithoutRef<'div'>, 'on
  * Visual divider for toolbar sections.
  */
 export interface SeparatorProps extends ComponentPropsWithoutRef<'div'> {}
+
+/**
+ * Props for the TableButton component.
+ * Button for inserting tables into the editor.
+ */
+export interface TableButtonProps extends Omit<ComponentPropsWithoutRef<'button'>, 'children'> {
+  /**
+   * Icon element to display in the button.
+   */
+  icon: ReactNode
+  /**
+   * Number of rows for the inserted table.
+   * @default 3
+   */
+  rows?: number
+  /**
+   * Number of columns for the inserted table.
+   * @default 3
+   */
+  columns?: number
+}
+
+/**
+ * Props for the TablePopover component.
+ * Wraps a table element and shows a popover with table action buttons on click.
+ */
+export interface TablePopoverProps {
+  /**
+   * The table element to wrap.
+   */
+  children: ReactNode
+  /**
+   * Slate element attributes to spread on the wrapper.
+   */
+  attributes: RenderElementProps['attributes']
+}
 
 /**
  * Editor context value.
